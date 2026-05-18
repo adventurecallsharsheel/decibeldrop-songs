@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=yes">
+  <title>🎧 Harsheel's Playlist ✨🔥</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #0b0b0f;
+      background-image: radial-gradient(circle at 20% 30%, #2a0a2e 5%, #000000 90%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      margin: 0;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter></defs><rect width="400" height="400" filter="url(%23noise)" opacity="0.05"/></svg>');
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(20, 20, 30, 0.75);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border-radius: 3.5rem;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.8), 0 0 0 1.5px rgba(255, 255, 255, 0.12), 0 0 40px #ff4da6;
+      padding: 1.8rem 1.5rem 2.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+      position: relative;
+      z-index: 2;
+      transition: all 0.2s ease;
+    }
+
+    .cringe-title {
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #ff00c1, #ff8c00, #d900ff, #00f2fe, #ff0055);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 18px #ff66c4);
+      text-shadow: 0 0 25px #ff3b9b;
+      word-break: break-word;
+      line-height: 1.2;
+      margin-bottom: -0.6rem;
+      animation: cringePulse 2.2s infinite alternate;
+    }
+
+    @keyframes cringePulse {
+      0% { filter: drop-shadow(0 0 12px #ff85d4); transform: scale(1); }
+      100% { filter: drop-shadow(0 0 28px #ff0080); transform: scale(1.02); }
+    }
+
+    .cover-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .cover-art {
+      width: 100%;
+      max-width: 280px;
+      aspect-ratio: 1/1;
+      border-radius: 2.5rem;
+      object-fit: cover;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.7), 0 0 35px #ff66c4, 0 0 8px #fff;
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1);
+      background: #1a1a2e;
+      display: block;
+    }
+
+    .spinning-disc {
+      animation: spinDisc 12s linear infinite;
+    }
+
+    @keyframes spinDisc {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .song-meta {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .song-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 0 20px #ffb3ff;
+      letter-spacing: -0.3px;
+      background: linear-gradient(to right, #ffe6ff, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .artist-movie {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      color: #d9b3ff;
+      font-weight: 500;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.08);
+      padding: 0.4rem 1.2rem;
+      border-radius: 3rem;
+      margin: 0 auto;
+      backdrop-filter: blur(5px);
+    }
+
+    .artist-movie i {
+      margin-right: 0.2rem;
+      color: #ff99cc;
+    }
+
+    .progress-area {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .time-row {
+      display: flex;
+      justify-content: space-between;
+      color: #ddd;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(to right, #ff4da6 0%, #ff4da6 0%, rgba(255,255,255,0.2) 0%);
+      border-radius: 10px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 18px #ff1a8c, 0 0 8px #fff;
+      border: 2px solid #ff99cc;
+      transition: 0.15s;
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.2rem 0.3rem;
+    }
+
+    .control-btn {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: none;
+      color: #fff;
+      font-size: 1.6rem;
+      width: 3.4rem;
+      height: 3.4rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+      cursor: pointer;
+    }
+
+    .control-btn i {
+      filter: drop-shadow(0 0 8px #ff99cc);
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.07);
+      box-shadow: 0 0 25px #ff4da6;
+    }
+
+    .play-btn {
+      width: 4.5rem;
+      height: 4.5rem;
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, #ff0080, #ff5e7e);
+      box-shadow: 0 0 40px #ff2277;
+      color: white;
+    }
+
+    .extra-actions {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 0.4rem;
+      color: #e0e0ff;
+      font-size: 1.3rem;
+    }
+
+    .extra-actions i {
+      padding: 0.5rem;
+      transition: 0.2s;
+      cursor: pointer;
+      filter: drop-shadow(0 0 8px #c084fc);
+    }
+
+    .extra-actions i:hover {
+      color: #ff99ff;
+      transform: scale(1.2);
+    }
+
+    .playlist-preview {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding: 0.5rem 0.2rem;
+      margin-top: 0.2rem;
+    }
+
+    .mini-card {
+      flex: 0 0 auto;
+      width: 65px;
+      text-align: center;
+      color: #ccc;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .mini-card img {
+      width: 60px;
+      height: 60px;
+      border-radius: 1.2rem;
+      object-fit: cover;
+      box-shadow: 0 0 15px #ff3388;
+      border: 2px solid transparent;
+    }
+
+    .mini-card.active img {
+      border: 2px solid #ff66c4;
+      box-shadow: 0 0 25px #ff00aa;
+    }
+
+    @media (max-width: 400px) {
+      .app-container {
+        padding: 1.5rem 1rem;
+      }
+      .cringe-title {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <h1 class="cringe-title">✨🎧 Harsheel's Playlist 🎧✨</h1>
+
+    <div class="cover-wrapper">
+      <img id="coverImage" class="cover-art spinning-disc" src="https://i.scdn.co/image/ab67616d0000b273cdce9a38222807fa703b4396" alt="Cover">
+    </div>
+
+    <div class="song-meta">
+      <div class="song-title" id="songTitle">Bairan</div>
+      <div class="artist-movie">
+        <span><i class="fas fa-microphone-alt"></i> <span id="artistName">Banjaare</span></span>
+        <span><i class="fas fa-film"></i> <span id="movieName">NA</span></span>
+      </div>
+    </div>
+
+    <div class="progress-area">
+      <input type="range" id="progressBar" value="0" min="0" max="100" step="0.1">
+      <div class="time-row">
+        <span id="currentTime">0:00</span>
+        <span id="durationTime">0:00</span>
+      </div>
+    </div>
+
+    <div class="player-controls">
+      <button class="control-btn" id="shuffleBtn"><i class="fas fa-shuffle"></i></button>
+      <button class="control-btn" id="prevBtn"><i class="fas fa-backward-step"></i></button>
+      <button class="control-btn play-btn" id="playPauseBtn"><i class="fas fa-play"></i></button>
+      <button class="control-btn" id="nextBtn"><i class="fas fa-forward-step"></i></button>
+      <button class="control-btn" id="repeatBtn"><i class="fas fa-repeat"></i></button>
+    </div>
+
+    <div class="extra-actions">
+      <i class="fas fa-heart" id="likeIcon" style="color: #ff4d6d;"></i>
+      <i class="fas fa-volume-high" id="volumeIcon"></i>
+      <i class="fas fa-list-ul" id="playlistIcon"></i>
+      <i class="fas fa-share-nodes"></i>
+    </div>
+
+    <div class="playlist-preview" id="miniPlaylist"></div>
+  </div>
+
+  <audio id="audioPlayer" preload="auto"></audio>
+
+  <script>
+    (function() {
+      // ------------------------------------------------------------
+      // 1. DEFINE THE 6 SONGS WITH REAL AUDIO & COVER IMAGES
+      // ------------------------------------------------------------
+      const SONG_LIBRARY = [
+        {
+          title: "Bairan",
+          artist: "Banjaare",
+          movie: "NA",
+          cover: "https://i.scdn.co/image/ab67616d0000b273cdce9a38222807fa703b4396",
+          audio: "https://github.com/adventurecallsharsheel/decibeldrop-songs/raw/refs/heads/main/Bairan.mp3"
+        },
+        {
+          title: "Bangles",
+          artist: "Sanju Rathod",
+          movie: "NA",
+          cover: "https://i.scdn.co/image/ab6761610000517403ae58450e917e4e075f6e1d",
+          audio: "https://github.com/adventurecallsharsheel/decibeldrop-songs/raw/refs/heads/main/Bangles%20%5B%20sanju%20rathod%5D%20orignal%20song%20lyrics.mp3"
+        },
+        {
+          title: "Chaand Baaliyan",
+          artist: "Aditya A",
+          movie: "NA",
+          cover: "https://i.scdn.co/image/ab67616d0000b2734be3b1a83cd1a2edb28800fc",
+          audio: "https://github.com/adventurecallsharsheel/decibeldrop-songs/raw/refs/heads/main/Chaand%20Baaliyan%20%20Aditya%20A.%20%20Trending%20Song%20%20Official%20Video.mp3"
+        },
+        {
+          title: "Sheesha",
+          artist: "Mitta Ror and Swara Verma",
+          movie: "NA",
+          cover: "https://placehold.co/400x400/471a3b/ff69b4?text=Sheesha",
+          audio: "https://github.com/adventurecallsharsheel/decibeldrop-songs/raw/refs/heads/main/Sheesha.mp3"
+        },
+        {
+          title: "Majboor",
+          artist: "Sheheryar Rehan and Zoha Waseem",
+          movie: "NA",
+          cover: "https://images.genius.com/070fa558dd4361f7a28979da772663c9.1000x1000x1.png",
+          audio: "https://cdn.pixabay.com/audio/2022/10/14/audio_993b7c8e5c.mp3"
+        },
+        {
+          title: "Charmer",
+          artist: "Diljit Doshanjh",
+          movie: "AURA",
+          cover: "https://i.scdn.co/image/ab67616d0000b273a15501e95ee3b83e2cef4df9",
+          audio: "https://github.com/adventurecallsharsheel/decibeldrop-songs/raw/refs/heads/main/Diljit%20Dosanjh,%20Avvy%20Sra,%20Raj%20Ranjodh%20-%20Charmer%20(Lyrics).mp3"
+        }
+      ];
+
+      // ------------------------------------------------------------
+      // 2. DOM ELEMENTS
+      // ------------------------------------------------------------
+      const audio = document.getElementById('audioPlayer');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const shuffleBtn = document.getElementById('shuffleBtn');
+      const repeatBtn = document.getElementById('repeatBtn');
+      const progressBar = document.getElementById('progressBar');
+      const currentTimeEl = document.getElementById('currentTime');
+      const durationTimeEl = document.getElementById('durationTime');
+      const coverImage = document.getElementById('coverImage');
+      const songTitleEl = document.getElementById('songTitle');
+      const artistNameEl = document.getElementById('artistName');
+      const movieNameEl = document.getElementById('movieName');
+      const miniPlaylist = document.getElementById('miniPlaylist');
+      const likeIcon = document.getElementById('likeIcon');
+
+      // ------------------------------------------------------------
+      // 3. STATE VARIABLES
+      // ------------------------------------------------------------
+      let currentIndex = 0;
+      let isPlaying = false;
+      let shuffleMode = false;
+      let repeatMode = 'none';
+      
+      const originalOrder = [...SONG_LIBRARY];
+      let playbackOrder = [...originalOrder];
+      let lastShuffledSequence = [];
+
+      // ------------------------------------------------------------
+      // 4. UTILITY FUNCTIONS
+      // ------------------------------------------------------------
+      function formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+
+      function shuffleArray(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function generateShuffledOrder() {
+        if (originalOrder.length <= 1) return [...originalOrder];
+        let newOrder;
+        do {
+          newOrder = shuffleArray(originalOrder);
+        } while (
+          lastShuffledSequence.length > 0 &&
+          JSON.stringify(newOrder) === JSON.stringify(lastShuffledSequence) &&
+          originalOrder.length > 1
+        );
+        lastShuffledSequence = [...newOrder];
+        return newOrder;
+      }
+
+      function updatePlaybackOrder() {
+        if (shuffleMode) {
+          playbackOrder = generateShuffledOrder();
+        } else {
+          playbackOrder = [...originalOrder];
+        }
+      }
+
+      function findCurrentPlaybackIndex() {
+        const currentSong = originalOrder[currentIndex];
+        return playbackOrder.findIndex(song => song.title === currentSong.title);
+      }
+
+      // ------------------------------------------------------------
+      // 5. CORE PLAYBACK FUNCTIONS
+      // ------------------------------------------------------------
+      function loadSongByOriginalIndex(index) {
+        if (index < 0 || index >= originalOrder.length) return;
+        currentIndex = index;
+        const song = originalOrder[currentIndex];
+        
+        audio.src = song.audio;
+        songTitleEl.textContent = song.title;
+        artistNameEl.textContent = song.artist;
+        movieNameEl.textContent = song.movie;
+        coverImage.src = song.cover;
+        
+        progressBar.value = 0;
+        currentTimeEl.textContent = "0:00";
+        durationTimeEl.textContent = "0:00";
+        
+        updateMiniActive();
+        
+        if (!isPlaying) {
+          coverImage.classList.remove('spinning-disc');
+        } else {
+          coverImage.classList.add('spinning-disc');
+        }
+      }
+
+      function playAudio() {
+        audio.play().then(() => {
+          isPlaying = true;
+          updatePlayIcon();
+          coverImage.classList.add('spinning-disc');
+        }).catch(err => {
+          console.warn("Play prevented:", err);
+          isPlaying = false;
+          updatePlayIcon();
+        });
+      }
+
+      function pauseAudio() {
+        audio.pause();
+        isPlaying = false;
+        updatePlayIcon();
+        coverImage.classList.remove('spinning-disc');
+      }
+
+      function togglePlay() {
+        if (isPlaying) {
+          pauseAudio();
+        } else {
+          playAudio();
+        }
+      }
+
+      function updatePlayIcon() {
+        const icon = playPauseBtn.querySelector('i');
+        icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+      }
+
+      // ------------------------------------------------------------
+      // 6. NEXT / PREVIOUS WITH CUSTOM SHUFFLE LOGIC
+      // ------------------------------------------------------------
+      function nextSong() {
+        if (originalOrder.length === 0) return;
+        if (shuffleMode && playbackOrder.length === 0) updatePlaybackOrder();
+        
+        let nextOriginalIndex;
+        
+        if (shuffleMode) {
+          const currentPlaybackIdx = findCurrentPlaybackIndex();
+          if (currentPlaybackIdx === -1) {
+            const firstSong = playbackOrder[0];
+            nextOriginalIndex = originalOrder.findIndex(s => s.title === firstSong.title);
+          } else {
+            const nextPlaybackIdx = (currentPlaybackIdx + 1) % playbackOrder.length;
+            const nextSongObj = playbackOrder[nextPlaybackIdx];
+            nextOriginalIndex = originalOrder.findIndex(s => s.title === nextSongObj.title);
+          }
+        } else {
+          nextOriginalIndex = (currentIndex + 1) % originalOrder.length;
+        }
+        
+        loadSongByOriginalIndex(nextOriginalIndex);
+        if (isPlaying) playAudio();
+      }
+
+      function prevSong() {
+        if (originalOrder.length === 0) return;
+        if (shuffleMode && playbackOrder.length === 0) updatePlaybackOrder();
+        
+        let prevOriginalIndex;
+        
+        if (shuffleMode) {
+          const currentPlaybackIdx = findCurrentPlaybackIndex();
+          if (currentPlaybackIdx === -1) {
+            const lastSong = playbackOrder[playbackOrder.length - 1];
+            prevOriginalIndex = originalOrder.findIndex(s => s.title === lastSong.title);
+          } else {
+            const prevPlaybackIdx = (currentPlaybackIdx - 1 + playbackOrder.length) % playbackOrder.length;
+            const prevSongObj = playbackOrder[prevPlaybackIdx];
+            prevOriginalIndex = originalOrder.findIndex(s => s.title === prevSongObj.title);
+          }
+        } else {
+          prevOriginalIndex = (currentIndex - 1 + originalOrder.length) % originalOrder.length;
+        }
+        
+        loadSongByOriginalIndex(prevOriginalIndex);
+        if (isPlaying) playAudio();
+      }
+
+      // ------------------------------------------------------------
+      // 7. SHUFFLE TOGGLE
+      // ------------------------------------------------------------
+      function toggleShuffle() {
+        shuffleMode = !shuffleMode;
+        shuffleBtn.style.color = shuffleMode ? '#ff66c4' : 'white';
+        
+        if (shuffleMode) {
+          updatePlaybackOrder();
+        } else {
+          playbackOrder = [...originalOrder];
+        }
+        
+        updateMiniActive();
+      }
+
+      // ------------------------------------------------------------
+      // 8. REPEAT MODES
+      // ------------------------------------------------------------
+      function cycleRepeat() {
+        if (repeatMode === 'none') {
+          repeatMode = 'one';
+          repeatBtn.innerHTML = '<i class="fas fa-repeat-1"></i>';
+          repeatBtn.style.color = '#ff66c4';
+        } else if (repeatMode === 'one') {
+          repeatMode = 'all';
+          repeatBtn.innerHTML = '<i class="fas fa-repeat"></i>';
+          repeatBtn.style.color = '#ff66c4';
+        } else {
+          repeatMode = 'none';
+          repeatBtn.innerHTML = '<i class="fas fa-repeat"></i>';
+          repeatBtn.style.color = 'white';
+        }
+      }
+
+      // ------------------------------------------------------------
+      // 9. PROGRESS & SEEK
+      // ------------------------------------------------------------
+      function updateProgress() {
+        if (audio.duration) {
+          const percent = (audio.currentTime / audio.duration) * 100;
+          progressBar.value = percent;
+          currentTimeEl.textContent = formatTime(audio.currentTime);
+          durationTimeEl.textContent = formatTime(audio.duration);
+          progressBar.style.background = `linear-gradient(to right, #ff4da6 ${percent}%, rgba(255,255,255,0.2) ${percent}%)`;
+        }
+      }
+
+      function setSeek(e) {
+        const value = e.target.value;
+        const seekTime = (value / 100) * audio.duration;
+        if (audio.duration && isFinite(seekTime)) {
+          audio.currentTime = seekTime;
+        }
+      }
+
+      // ------------------------------------------------------------
+      // 10. SONG END HANDLER
+      // ------------------------------------------------------------
+      function onSongEnd() {
+        if (repeatMode === 'one') {
+          audio.currentTime = 0;
+          playAudio();
+        } else if (repeatMode === 'all') {
+          nextSong();
+        } else {
+          const isLastInOrder = shuffleMode 
+            ? (findCurrentPlaybackIndex() === playbackOrder.length - 1)
+            : (currentIndex === originalOrder.length - 1);
+            
+          if (!isLastInOrder) {
+            nextSong();
+          } else {
+            pauseAudio();
+            audio.currentTime = 0;
+            updateProgress();
+          }
+        }
+      }
+
+      // ------------------------------------------------------------
+      // 11. UI HELPERS
+      // ------------------------------------------------------------
+      function toggleLike() {
+        likeIcon.style.color = likeIcon.style.color === 'rgb(255, 77, 109)' ? '#ffffff' : '#ff4d6d';
+      }
+
+      function renderMiniPlaylist() {
+        miniPlaylist.innerHTML = '';
+        originalOrder.forEach((song, idx) => {
+          const card = document.createElement('div');
+          card.className = `mini-card ${idx === currentIndex ? 'active' : ''}`;
+          card.innerHTML = `<img src="${song.cover}" alt="${song.title}"><div>${song.title.substring(0,10)}</div>`;
+          card.addEventListener('click', () => {
+            if (idx === currentIndex && isPlaying) return;
+            loadSongByOriginalIndex(idx);
+            playAudio();
+          });
+          miniPlaylist.appendChild(card);
+        });
+      }
+
+      function updateMiniActive() {
+        const cards = document.querySelectorAll('.mini-card');
+        cards.forEach((card, i) => {
+          if (i === currentIndex) card.classList.add('active');
+          else card.classList.remove('active');
+        });
+      }
+
+      // ------------------------------------------------------------
+      // 12. EVENT LISTENERS
+      // ------------------------------------------------------------
+      playPauseBtn.addEventListener('click', togglePlay);
+      nextBtn.addEventListener('click', nextSong);
+      prevBtn.addEventListener('click', prevSong);
+      shuffleBtn.addEventListener('click', toggleShuffle);
+      repeatBtn.addEventListener('click', cycleRepeat);
+      progressBar.addEventListener('input', setSeek);
+      likeIcon.addEventListener('click', toggleLike);
+      
+      audio.addEventListener('timeupdate', updateProgress);
+      audio.addEventListener('loadedmetadata', () => {
+        durationTimeEl.textContent = formatTime(audio.duration);
+      });
+      audio.addEventListener('ended', onSongEnd);
+      
+      document.getElementById('volumeIcon').addEventListener('click', () => {
+        alert("🔊 Volume control: use your device buttons! (cringe)");
+      });
+      
+      document.getElementById('playlistIcon').addEventListener('click', () => {
+        alert("📃 Harsheel's Playlist: only certified bangers!");
+      });
+
+      // ------------------------------------------------------------
+      // 13. INITIALIZATION
+      // ------------------------------------------------------------
+      function init() {
+        playbackOrder = [...originalOrder];
+        shuffleMode = false;
+        shuffleBtn.style.color = 'white';
+        repeatMode = 'none';
+        repeatBtn.innerHTML = '<i class="fas fa-repeat"></i>';
+        repeatBtn.style.color = 'white';
+        
+        loadSongByOriginalIndex(0);
+        renderMiniPlaylist();
+        updatePlayIcon();
+        
+        document.body.addEventListener('click', function unlock() {
+          if (audio.paused && !isPlaying) {
+            // just to unlock audio context
+          }
+        }, { once: true });
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
